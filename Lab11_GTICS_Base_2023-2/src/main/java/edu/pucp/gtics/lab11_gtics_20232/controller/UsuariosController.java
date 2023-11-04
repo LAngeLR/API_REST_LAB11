@@ -4,6 +4,7 @@ import edu.pucp.gtics.lab11_gtics_20232.entity.User;
 import edu.pucp.gtics.lab11_gtics_20232.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,7 +23,14 @@ public class UsuariosController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/registro")
+/*
+    @GetMapping(value = "/listaUsuarios")
+    public List<User> listarUsuarios(){
+        return userRepository.findAll();
+    }
+*/
+
+    @PostMapping(value = "/registro/xwwwform", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<HashMap<String, Object>> registrarUsuario(@RequestBody User usuario){
 
             HashMap<String, Object> response = new HashMap<>();

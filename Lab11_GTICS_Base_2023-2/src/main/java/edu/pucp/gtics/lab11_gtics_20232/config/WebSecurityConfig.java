@@ -47,7 +47,10 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/juegos/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/distribuidora/**").hasAnyAuthority("ADMIN")
-                .antMatchers("/usuarios/**").hasAnyAuthority("ADMIN", "USER")
+/*
+                .antMatchers("/usuarios/listaUsuarios").hasAnyAuthority("ADMIN")
+*/
+                .antMatchers("/usuarios/actualizarUsuario").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().permitAll();
 
         return http.build();
