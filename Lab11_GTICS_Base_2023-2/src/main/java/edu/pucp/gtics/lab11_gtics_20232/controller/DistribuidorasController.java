@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/distribuidora")
 
 public class DistribuidorasController {
