@@ -108,14 +108,16 @@ public class JuegosController {
     }
 
     /*actualizar un juego (localhost:8080/gameshop4/juegos/actualizar) esta para body-raw*/
-    @PutMapping(value = { "/actualizar"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ResponseEntity<HashMap<String, Object>> actualizar(Juegos juegoRecibido) {
+    @PutMapping(value = { "/actualizar"})
+    public ResponseEntity<HashMap<String, Object>> actualizar(@RequestBody Juegos juegoRecibido) {
 
         HashMap<String, Object> rpta = new HashMap<>();
-
+        System.out.println(juegoRecibido.getIdjuego());
         if (juegoRecibido.getIdjuego() != 0 && juegoRecibido.getIdjuego() > 0) {
 
             Optional<Juegos> byId = juegosRepository.findById(juegoRecibido.getIdjuego());
+
+
             if (byId.isPresent()) {
                 Juegos juegoFromDb = byId.get();
 
