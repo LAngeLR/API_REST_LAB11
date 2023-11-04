@@ -2,17 +2,10 @@ package edu.pucp.gtics.lab11_gtics_20232.controller;
 
 import edu.pucp.gtics.lab11_gtics_20232.entity.*;
 import edu.pucp.gtics.lab11_gtics_20232.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -39,14 +32,26 @@ public class JuegosController {
         this.userRepository = userRepository;
     }
 
-    /*listar (localhost:8080/gameshop4/juegos/lista)*/
-    @GetMapping(value = {"/lista"})
-    public List<Juegos> listaJuegos (){
-        return juegosRepository.findAll();
+    @GetMapping("/lista")
+    public ResponseEntity<HashMap<String, Object>> obtenerJuegoOLista(@RequestParam(name = "id", required = false) Integer id) {
+        HashMap<String, Object> respuesta = new HashMap<>();
+        if (id != null) {
+            Optional<Juegos> juego = juegosRepository.findById(id);
+            if (juego.isPresent()) {
+                respuesta.put("result", "ok");
+                respuesta.put("producto", juego.get());
+            } else {
+                respuesta.put("result", "no existe");
+            }
+        } else {
+            List<Juegos> juegos = juegosRepository.findAll();
+            respuesta.put("result", "ok");
+            respuesta.put("productos", juegos);
+        }
+        return ResponseEntity.ok(respuesta);
     }
 
-    /*borrar (localhost:8080/gameshop4/juegos/borrar?id=1)*/
-    @DeleteMapping("/borrar")
+    @DeleteMapping("/lista")
     public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr){
 
         try{
@@ -68,8 +73,7 @@ public class JuegosController {
         }
     }
 
-    /*crear (localhost:8080/gameshop4/juegos/crear) usar los nombres de la bd*/
-    @PostMapping("/crear")
+    @PostMapping("/lista")
     public ResponseEntity<HashMap<String, Object>> guardarJuego(
             @RequestBody Juegos juegos,
             @RequestParam(value = "fetchId", required = false) boolean fetchId) {
@@ -84,31 +88,7 @@ public class JuegosController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseJson);
     }
 
-    /*obtener un juego (localhost:8080/gameshop4/juegos/obtener?id=5)*/
-    @GetMapping(value = "/obtener")
-    public ResponseEntity<HashMap<String, Object>> buscarProducto(@RequestParam("id") String idStr) {
-
-
-        try {
-            int id = Integer.parseInt(idStr);
-            Optional<Juegos> byId = juegosRepository.findById(id);
-
-            HashMap<String, Object> respuesta = new HashMap<>();
-
-            if (byId.isPresent()) {
-                respuesta.put("result", "ok");
-                respuesta.put("producto", byId.get());
-            } else {
-                respuesta.put("result", "no existe");
-            }
-            return ResponseEntity.ok(respuesta);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    /*actualizar un juego (localhost:8080/gameshop4/juegos/actualizar) esta para body-raw*/
-    @PutMapping(value = { "/actualizar"})
+    @PutMapping(value = { "/lista"})
     public ResponseEntity<HashMap<String, Object>> actualizar(@RequestBody Juegos juegoRecibido) {
 
         HashMap<String, Object> rpta = new HashMap<>();
@@ -160,58 +140,4 @@ public class JuegosController {
             return ResponseEntity.badRequest().body(rpta);
         }
     }
-
-
-    /*
-    @GetMapping("/juegos/editar")
-    public String editarJuegos(@RequestParam("id") int id, Model model){
-        Optional<Juegos> opt = juegosRepository.findById(id);
-        List<Plataformas> listaPlataformas = plataformasRepository.findAll();
-        List<Distribuidoras> listaDistribuidoras = distribuidorasRepository.findAll();
-        List<Generos> listaGeneros = generosRepository.findAll();
-        if (opt.isPresent()){
-            Juegos juego = opt.get();
-            model.addAttribute("juego", juego);
-            model.addAttribute("listaPlataformas", listaPlataformas);
-            model.addAttribute("listaDistribuidoras", listaDistribuidoras);
-            model.addAttribute("listaGeneros", listaGeneros);
-            return "juegos/editarFrm";
-        }else {
-            return "redirect:/juegos/lista";
-        }
-    }
-
-    @PostMapping("/juegos/guardar")
-    public String guardarJuegos(Model model, RedirectAttributes attr, @ModelAttribute("juego") @Valid Juegos juego, BindingResult bindingResult ){
-        if(bindingResult.hasErrors( )){
-            List<Plataformas> listaPlataformas = plataformasRepository.findAll();
-            List<Distribuidoras> listaDistribuidoras = distribuidorasRepository.findAll();
-            List<Generos> listaGeneros = generosRepository.findAll();
-            model.addAttribute("juego", juego);
-            model.addAttribute("listaPlataformas", listaPlataformas);
-            model.addAttribute("listaDistribuidoras", listaDistribuidoras);
-            model.addAttribute("listaGeneros", listaGeneros);
-            return "juegos/editarFrm";
-        } else {
-            if (juego.getIdjuego() == 0) {
-                attr.addFlashAttribute("msg", "Juego creado exitosamente");
-            } else {
-                attr.addFlashAttribute("msg", "Juego actualizado exitosamente");
-            }
-            juegosRepository.save(juego);
-            return "redirect:/juegos/lista";
-        }
-
-
-    }
-
-    @GetMapping("/juegos/borrar")
-    public String borrarDistribuidora(@RequestParam("id") int id){
-        Optional<Juegos> opt = juegosRepository.findById(id);
-        if (opt.isPresent()) {
-            juegosRepository.deleteById(id);
-        }
-        return "redirect:/juegos/lista";
-    }
-    */
 }

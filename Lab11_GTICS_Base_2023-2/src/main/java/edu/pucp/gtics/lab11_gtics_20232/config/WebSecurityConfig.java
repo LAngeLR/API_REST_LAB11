@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 public class WebSecurityConfig {
     final DataSource dataSource;
 
+
     public WebSecurityConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -51,4 +52,5 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
 }
