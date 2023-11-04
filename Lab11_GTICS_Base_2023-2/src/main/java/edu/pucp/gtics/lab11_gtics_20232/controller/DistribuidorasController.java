@@ -2,6 +2,7 @@ package edu.pucp.gtics.lab11_gtics_20232.controller;
 
 import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Juegos;
+import edu.pucp.gtics.lab11_gtics_20232.entity.JuegosxUsuario;
 import edu.pucp.gtics.lab11_gtics_20232.repository.DistribuidorasRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.JuegosRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.PaisesRepository;
@@ -34,20 +35,26 @@ public class DistribuidorasController {
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<HashMap<String, Object>> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) Integer id) {
+    public ResponseEntity<HashMap<String, Object>> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) String idStr) {
+
         HashMap<String, Object> respuesta = new HashMap<>();
-        if (id != null) {
-            Optional<Distribuidoras> distribuidoras = distribuidorasRepository.findById(id);
-            if (distribuidoras.isPresent()) {
-                respuesta.put("result", "ok");
-                respuesta.put("distribuidora", distribuidoras.get());
-            } else {
-                respuesta.put("result", "no existe");
+
+        if (idStr != null) {
+            try{
+                int id = Integer.parseInt(idStr);
+                Optional<Distribuidoras> distribuidora = distribuidorasRepository.findById(id);
+                if (distribuidora.isPresent()) {
+                    respuesta.put("distribuidora", distribuidora.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+            }
+            catch(NumberFormatException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
             List<Distribuidoras> distribuidoras = distribuidorasRepository.findAll();
-            respuesta.put("result", "ok");
-            respuesta.put("distribuidora", distribuidoras);
+            respuesta.put("distribuidoras", distribuidoras);
         }
         return ResponseEntity.ok(respuesta);
     }
@@ -72,8 +79,7 @@ public class DistribuidorasController {
                 distribuidorasRepository.deleteById(id);
                 rpta.put("result", "ok");
             } else {
-                rpta.put("result", "no ok");
-                rpta.put("msg", "el ID enviado no existe");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
             return ResponseEntity.ok(rpta);
         } catch (NumberFormatException e) {

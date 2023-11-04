@@ -23,30 +23,38 @@ public class JuegosController {
     GenerosRepository generosRepository;
     final
     UserRepository userRepository;
+    private final JuegosxUsuarioRepository juegosxUsuarioRepository;
 
-    public JuegosController(JuegosRepository juegosRepository, PlataformasRepository plataformasRepository, DistribuidorasRepository distribuidorasRepository, GenerosRepository generosRepository, UserRepository userRepository) {
+    public JuegosController(JuegosRepository juegosRepository, PlataformasRepository plataformasRepository, DistribuidorasRepository distribuidorasRepository, GenerosRepository generosRepository, UserRepository userRepository,
+                            JuegosxUsuarioRepository juegosxUsuarioRepository) {
         this.juegosRepository = juegosRepository;
         this.plataformasRepository = plataformasRepository;
         this.distribuidorasRepository = distribuidorasRepository;
         this.generosRepository = generosRepository;
         this.userRepository = userRepository;
+        this.juegosxUsuarioRepository = juegosxUsuarioRepository;
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<HashMap<String, Object>> obtenerJuegoOLista(@RequestParam(name = "id", required = false) Integer id) {
+    public ResponseEntity<HashMap<String, Object>> obtenerJuegoOLista(@RequestParam(name = "id", required = false) String idStr) {
         HashMap<String, Object> respuesta = new HashMap<>();
-        if (id != null) {
-            Optional<Juegos> juego = juegosRepository.findById(id);
-            if (juego.isPresent()) {
-                respuesta.put("result", "ok");
-                respuesta.put("producto", juego.get());
-            } else {
-                respuesta.put("result", "no existe");
+
+        if (idStr != null) {
+            try{
+                int id = Integer.parseInt(idStr);
+                Optional<Juegos> juego = juegosRepository.findById(id);
+                if (juego.isPresent()) {
+                    respuesta.put("juego", juego.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+            }
+            catch(NumberFormatException e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
             List<Juegos> juegos = juegosRepository.findAll();
-            respuesta.put("result", "ok");
-            respuesta.put("productos", juegos);
+            respuesta.put("juegos", juegos);
         }
         return ResponseEntity.ok(respuesta);
     }
@@ -61,11 +69,14 @@ public class JuegosController {
 
             Optional<Juegos> byId = juegosRepository.findById(id);
             if(byId.isPresent()){
+                Juegos juegos = byId.get();
+
+                List<JuegosxUsuario> juegosxUsuarios = juegosxUsuarioRepository.buscar(juegos.getIdjuego());
+                juegosxUsuarioRepository.deleteAll(juegosxUsuarios);
                 juegosRepository.deleteById(id);
                 rpta.put("result","ok");
             }else{
-                rpta.put("result","no ok");
-                rpta.put("msg","el ID enviado no existe");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
             return ResponseEntity.ok(rpta);
         }catch (NumberFormatException e){
@@ -130,13 +141,11 @@ public class JuegosController {
                 rpta.put("result", "ok");
                 return ResponseEntity.ok(rpta);
             } else {
-                rpta.put("result", "error");
                 rpta.put("msg", "El ID del juego enviado no existe");
                 return ResponseEntity.badRequest().body(rpta);
             }
         } else {
             rpta.put("result", "error");
-            rpta.put("msg", "debe enviar un juego con ID");
             return ResponseEntity.badRequest().body(rpta);
         }
     }
