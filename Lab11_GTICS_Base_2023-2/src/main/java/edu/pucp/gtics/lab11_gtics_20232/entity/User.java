@@ -8,7 +8,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idusuario", nullable = false)
-    private int idusuario;
+    private Integer idusuario;
     private String apellidos;
     private String nombres;
     private String correo;
@@ -16,9 +16,7 @@ public class User {
     private String autorizacion;
     private int enabled;
 
-    public int getIdusuario() {
-        return idusuario;
-    }
+    public Integer getIdusuario() {return idusuario;}
 
     public void setIdusuario(int idusuario) {
         this.idusuario = idusuario;
