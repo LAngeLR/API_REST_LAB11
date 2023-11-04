@@ -39,13 +39,13 @@ public class JuegosController {
         this.userRepository = userRepository;
     }
 
-    /*listar*/
+    /*listar (localhost:8080/gameshop4/juegos/lista)*/
     @GetMapping(value = {"/lista"})
     public List<Juegos> listaJuegos (){
         return juegosRepository.findAll();
     }
 
-    /*borrar*/
+    /*borrar (localhost:8080/gameshop4/juegos/borrar?id=1)*/
     @DeleteMapping("/borrar")
     public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr){
 
@@ -68,7 +68,7 @@ public class JuegosController {
         }
     }
 
-    /*crear*/
+    /*crear (localhost:8080/gameshop4/juegos/crear) usar los nombres de la bd*/
     @PostMapping("/crear")
     public ResponseEntity<HashMap<String, Object>> guardarJuego(
             @RequestBody Juegos juegos,
@@ -84,7 +84,7 @@ public class JuegosController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseJson);
     }
 
-    /*obtener un juego*/
+    /*obtener un juego (localhost:8080/gameshop4/juegos/obtener?id=5)*/
     @GetMapping(value = "/obtener")
     public ResponseEntity<HashMap<String, Object>> buscarProducto(@RequestParam("id") String idStr) {
 
@@ -107,7 +107,7 @@ public class JuegosController {
         }
     }
 
-    /*actualizar un juego*/
+    /*actualizar un juego (localhost:8080/gameshop4/juegos/actualizar) esta para body-raw*/
     @PutMapping(value = { "/actualizar"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ResponseEntity<HashMap<String, Object>> actualizar(Juegos juegoRecibido) {
 
