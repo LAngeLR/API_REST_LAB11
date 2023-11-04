@@ -135,14 +135,10 @@ public class DistribuidorasController {
                 rpta.put("result", "ok");
                 return ResponseEntity.ok(rpta);
             } else {
-                rpta.put("result", "error");
-                rpta.put("msg", "El ID de la distribuidora enviado no existe");
-                return ResponseEntity.badRequest().body(rpta);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
         } else {
-            rpta.put("result", "error");
-            rpta.put("msg", "debe enviar una distribuidora con ID");
-            return ResponseEntity.badRequest().body(rpta);
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }

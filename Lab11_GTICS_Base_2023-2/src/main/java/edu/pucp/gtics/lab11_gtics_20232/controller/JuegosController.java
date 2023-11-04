@@ -141,12 +141,10 @@ public class JuegosController {
                 rpta.put("result", "ok");
                 return ResponseEntity.ok(rpta);
             } else {
-                rpta.put("msg", "El ID del juego enviado no existe");
-                return ResponseEntity.badRequest().body(rpta);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
         } else {
-            rpta.put("result", "error");
-            return ResponseEntity.badRequest().body(rpta);
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }
