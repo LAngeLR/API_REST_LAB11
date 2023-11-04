@@ -1,5 +1,6 @@
 package edu.pucp.gtics.lab11_gtics_20232.repository;
 
+import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Juegos;
 import edu.pucp.gtics.lab11_gtics_20232.entity.JuegosUserDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,7 @@ public interface JuegosRepository extends JpaRepository<Juegos,Integer> {
     @Modifying
     @Query(value = "Insert INTO juegosxusuario (idusuario, idjuego, cantidad) VALUES (?,?,1)", nativeQuery = true)
     void registrarJuegoPorUser(int idusuario, int idjuego);
+
+    @Query(value = "select * from juegos where iddistribuidora=?1",nativeQuery = true)
+    List<Juegos> buscar(int id);
 }
