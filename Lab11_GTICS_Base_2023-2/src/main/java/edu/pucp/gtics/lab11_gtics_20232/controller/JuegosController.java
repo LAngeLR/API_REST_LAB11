@@ -60,15 +60,16 @@ public class JuegosController {
     }
 
     @GetMapping("/listaMisJuegos")
-    public ResponseEntity<HashMap<String, Object>> obtenerMisJuegos(@RequestParam(name = "id", required = false) Integer idUsuario) {
-        HashMap<String, Object> respuesta = new HashMap<>();
+    public List<JuegosxUsuario> obtenerMisJuegos(@RequestParam(name = "id") Integer idUsuario) {
+/*        HashMap<String, Object> respuesta = new HashMap<>();
 
-        try{
+        try{*/
             Optional<User> usuario = userRepository.findById(idUsuario);
             if (usuario.isPresent()) {
-                List<JuegosxUsuario> juegosxUsuarios = juegosxUsuarioRepository.buscar(idUsuario);
-                respuesta.put("juegos", juegosxUsuarios);
+                return juegosxUsuarioRepository.buscarJuegosPorUsuario(idUsuario);
             } else {
+                return null;
+            } /*else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
         }
@@ -76,7 +77,7 @@ public class JuegosController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(respuesta);*/
     }
 
     @DeleteMapping("/lista")

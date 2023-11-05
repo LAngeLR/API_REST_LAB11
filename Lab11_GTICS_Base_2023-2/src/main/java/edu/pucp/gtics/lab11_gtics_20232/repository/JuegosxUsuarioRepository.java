@@ -13,4 +13,7 @@ public  interface JuegosxUsuarioRepository extends JpaRepository<JuegosxUsuario,
     @Query(value = "select * from juegosxusuario where idjuego=?1",nativeQuery = true)
     List<JuegosxUsuario> buscar(int id);
 
+    @Query(value = "select * from juegosxusuario where idusuario=?1",nativeQuery = true)
+    List<JuegosxUsuario> buscarJuegosPorUsuario(int id);
+
 }
