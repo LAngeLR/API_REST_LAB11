@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -35,28 +36,26 @@ public class DistribuidorasController {
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<HashMap<String, Object>> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) String idStr) {
-
-        HashMap<String, Object> respuesta = new HashMap<>();
+    public ResponseEntity<List<Distribuidoras>> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) String idStr) {
+        List<Distribuidoras> distribuidoras = new ArrayList<>();
 
         if (idStr != null) {
-            try{
+            try {
                 int id = Integer.parseInt(idStr);
                 Optional<Distribuidoras> distribuidora = distribuidorasRepository.findById(id);
                 if (distribuidora.isPresent()) {
-                    respuesta.put("distribuidora", distribuidora.get());
+                    distribuidoras.add(distribuidora.get());
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 }
-            }
-            catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
-            List<Distribuidoras> distribuidoras = distribuidorasRepository.findAll();
-            respuesta.put("distribuidoras", distribuidoras);
+            distribuidoras = distribuidorasRepository.findAll();
         }
-        return ResponseEntity.ok(respuesta);
+
+        return ResponseEntity.ok(distribuidoras);
     }
 
     @DeleteMapping("/lista")

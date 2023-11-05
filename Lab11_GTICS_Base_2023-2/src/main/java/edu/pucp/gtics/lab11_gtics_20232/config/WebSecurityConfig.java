@@ -40,18 +40,21 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        /*
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().disable();
         http.httpBasic();
 
+
+
         http.authorizeRequests()
                 .antMatchers("/juegos/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/distribuidora/**").hasAnyAuthority("ADMIN")
-/*
+
                 .antMatchers("/usuarios/listaUsuarios").hasAnyAuthority("ADMIN")
-*/
-                .antMatchers("/usuarios/actualizarUsuario").hasAnyAuthority("ADMIN", "USER")
-                .anyRequest().permitAll();
+
+                .antMatchers("/usuarios/actualizarUsuario").hasAnyAuthority("ADMIN", "USER")*/
+        http.authorizeRequests().anyRequest().permitAll();
 
         return http.build();
     }
