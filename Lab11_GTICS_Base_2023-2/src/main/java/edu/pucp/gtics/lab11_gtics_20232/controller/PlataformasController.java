@@ -2,7 +2,6 @@ package edu.pucp.gtics.lab11_gtics_20232.controller;
 
 import edu.pucp.gtics.lab11_gtics_20232.entity.*;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Plataformas;
-import edu.pucp.gtics.lab11_gtics_20232.repository.FacturasRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.JuegosxUsuarioRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.PlataformasRepository;
 import org.springframework.http.HttpStatus;
@@ -22,12 +21,10 @@ public class PlataformasController {
 
     final PlataformasRepository plataformasRepository;
     final JuegosxUsuarioRepository juegosxUsuarioRepository;
-    final FacturasRepository facturasRepository;
 
-    public PlataformasController(PlataformasRepository plataformasRepository, JuegosxUsuarioRepository juegosxUsuarioRepository, FacturasRepository facturasRepository) {
+    public PlataformasController(PlataformasRepository plataformasRepository, JuegosxUsuarioRepository juegosxUsuarioRepository) {
         this.plataformasRepository = plataformasRepository;
         this.juegosxUsuarioRepository = juegosxUsuarioRepository;
-        this.facturasRepository = facturasRepository;
     }
 
     @GetMapping("/lista")
