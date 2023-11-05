@@ -2,9 +2,11 @@ package edu.pucp.gtics.lab11_gtics_20232.controller;
 
 import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
+import edu.pucp.gtics.lab11_gtics_20232.entity.Juegos;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Plataformas;
 import edu.pucp.gtics.lab11_gtics_20232.repository.DistribuidorasRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.DistribuidorasRepository;
+import edu.pucp.gtics.lab11_gtics_20232.repository.JuegosRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.PaisesRepository;
 
 import org.springframework.http.HttpStatus;
@@ -28,11 +30,14 @@ public class DistribuidorasController {
     DistribuidorasRepository distribuidorasRepository;
     final
     PaisesRepository paisesRepository;
+    final
+    JuegosRepository juegosRepository;
 
-    public DistribuidorasController(DistribuidorasRepository distribuidorasRepository, PaisesRepository paisesRepository, DistribuidorasRepository DistribuidorasRepository) {
+    public DistribuidorasController(DistribuidorasRepository distribuidorasRepository, PaisesRepository paisesRepository, DistribuidorasRepository DistribuidorasRepository,JuegosRepository juegosRepository) {
         this.distribuidorasRepository = distribuidorasRepository;
         this.paisesRepository = paisesRepository;
         this.DistribuidorasRepository = DistribuidorasRepository;
+        this.juegosRepository=juegosRepository;
     }
 
     @GetMapping("/lista")
@@ -108,6 +113,34 @@ public class DistribuidorasController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
         } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @DeleteMapping("/lista")
+    public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr) {
+
+        try {
+            int id = Integer.parseInt(idStr);
+
+            HashMap<String, Object> rpta = new HashMap<>();
+
+            Optional<Distribuidoras> byId = distribuidorasRepository.findById(id);
+            if (byId.isPresent()) {
+                Distribuidoras distribuidora = byId.get();
+
+                List<Juegos> juegosWithDistribuidora = juegosRepository.buscar(distribuidora.getIddistribuidora());
+                for (Juegos juego : juegosWithDistribuidora) {
+                    juego.setDistribuidora(null);
+                    juegosRepository.save(juego);
+                }
+                distribuidorasRepository.deleteById(id);
+                rpta.put("result", "ok");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(rpta);
+        } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
