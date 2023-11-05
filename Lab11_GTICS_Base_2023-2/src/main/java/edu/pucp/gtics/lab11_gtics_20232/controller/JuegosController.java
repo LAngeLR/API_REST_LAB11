@@ -17,10 +17,7 @@ import java.util.Optional;
 public class JuegosController {
     final
     JuegosRepository juegosRepository;
-    final
-    FacturasRepository facturasRepository;
-    final
-    PlataformasRepository plataformasRepository;
+    final PlataformasRepository plataformasRepository;
     final
     DistribuidorasRepository distribuidorasRepository;
     final
@@ -30,14 +27,13 @@ public class JuegosController {
     private final JuegosxUsuarioRepository juegosxUsuarioRepository;
 
     public JuegosController(JuegosRepository juegosRepository, PlataformasRepository plataformasRepository, DistribuidorasRepository distribuidorasRepository, GenerosRepository generosRepository, UserRepository userRepository,
-                            JuegosxUsuarioRepository juegosxUsuarioRepository, FacturasRepository facturasRepository) {
+                            JuegosxUsuarioRepository juegosxUsuarioRepository) {
         this.juegosRepository = juegosRepository;
         this.plataformasRepository = plataformasRepository;
         this.distribuidorasRepository = distribuidorasRepository;
         this.generosRepository = generosRepository;
         this.userRepository = userRepository;
         this.juegosxUsuarioRepository = juegosxUsuarioRepository;
-        this.facturasRepository = facturasRepository;
     }
 
     @GetMapping("/lista")
@@ -82,39 +78,7 @@ public class JuegosController {
         return ResponseEntity.ok(respuesta);*/
     }
 
-    @Transactional
-    @DeleteMapping("/lista")
-    public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr){
 
-        try{
-            int id = Integer.parseInt(idStr);
-
-            HashMap<String, Object> rpta = new HashMap<>();
-
-            Optional<Juegos> byId = juegosRepository.findById(id);
-            if(byId.isPresent()){
-                Juegos juegos = byId.get();
-
-                List<JuegosxUsuario> juegosxUsuarios = juegosxUsuarioRepository.buscar(juegos.getIdjuego());
-                for (JuegosxUsuario ju : juegosxUsuarios) {
-                    List<Facturas> facturasRelacionadas = facturasRepository.buscarPorIdJuegosxUsuario(ju.getIdJuegosxUsuario());
-                    for (Facturas factura : facturasRelacionadas) {
-                        factura.setIdjuegoxusuario(null);
-                    }
-                    // Guardar las facturas actualizadas en la base de datos
-                    facturasRepository.saveAll(facturasRelacionadas);
-                }
-                juegosxUsuarioRepository.deleteAll(juegosxUsuarios);
-                juegosRepository.deleteById(id);
-                rpta.put("result","ok");
-            }else{
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            return ResponseEntity.ok(rpta);
-        }catch (NumberFormatException e){
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
 
     @PostMapping("/lista")
     public ResponseEntity<HashMap<String, Object>> guardarJuego(
