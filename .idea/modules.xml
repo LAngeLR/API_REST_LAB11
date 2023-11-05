@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/API_REST_LAB11.iml" filepath="$PROJECT_DIR$/.idea/API_REST_LAB11.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab11_GTICS_Base_2023-2/Lab5_GTics_eval_2022-1.iml" filepath="$PROJECT_DIR$/Lab11_GTICS_Base_2023-2/Lab5_GTics_eval_2022-1.iml" />
     </modules>
   </component>
 </project>
