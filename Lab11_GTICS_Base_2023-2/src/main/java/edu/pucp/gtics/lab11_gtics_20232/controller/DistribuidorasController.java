@@ -3,6 +3,7 @@ package edu.pucp.gtics.lab11_gtics_20232.controller;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Juegos;
 import edu.pucp.gtics.lab11_gtics_20232.entity.JuegosxUsuario;
+import edu.pucp.gtics.lab11_gtics_20232.entity.Plataformas;
 import edu.pucp.gtics.lab11_gtics_20232.repository.DistribuidorasRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.JuegosRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.PaisesRepository;
