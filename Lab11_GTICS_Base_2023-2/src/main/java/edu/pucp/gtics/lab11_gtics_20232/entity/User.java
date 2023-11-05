@@ -24,6 +24,8 @@ public class User {
         this.enabled = enabled;
     }
 
+    /*
+
     public String getTelefono() {
         return telefono;
     }
@@ -34,6 +36,7 @@ public class User {
 
     private String telefono;
 
+
     public String getNumerocuenta() {
         return numerocuenta;
     }
@@ -42,7 +45,7 @@ public class User {
         this.numerocuenta = numerocuenta;
     }
 
-    private String numerocuenta;
+    private String numerocuenta;  */
 
     public Integer getIdusuario() {return idusuario;}
 

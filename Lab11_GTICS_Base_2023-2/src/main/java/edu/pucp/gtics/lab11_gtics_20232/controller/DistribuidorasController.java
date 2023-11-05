@@ -1,11 +1,10 @@
 package edu.pucp.gtics.lab11_gtics_20232.controller;
 
 import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
-import edu.pucp.gtics.lab11_gtics_20232.entity.Juegos;
-import edu.pucp.gtics.lab11_gtics_20232.entity.JuegosxUsuario;
+import edu.pucp.gtics.lab11_gtics_20232.entity.Distribuidoras;
 import edu.pucp.gtics.lab11_gtics_20232.entity.Plataformas;
 import edu.pucp.gtics.lab11_gtics_20232.repository.DistribuidorasRepository;
-import edu.pucp.gtics.lab11_gtics_20232.repository.JuegosRepository;
+import edu.pucp.gtics.lab11_gtics_20232.repository.DistribuidorasRepository;
 import edu.pucp.gtics.lab11_gtics_20232.repository.PaisesRepository;
 
 import org.springframework.http.HttpStatus;
@@ -24,20 +23,20 @@ import java.util.Optional;
 public class DistribuidorasController {
 
     final
-    JuegosRepository juegosRepository;
+    DistribuidorasRepository DistribuidorasRepository;
     final
     DistribuidorasRepository distribuidorasRepository;
     final
     PaisesRepository paisesRepository;
 
-    public DistribuidorasController(DistribuidorasRepository distribuidorasRepository, PaisesRepository paisesRepository, JuegosRepository juegosRepository) {
+    public DistribuidorasController(DistribuidorasRepository distribuidorasRepository, PaisesRepository paisesRepository, DistribuidorasRepository DistribuidorasRepository) {
         this.distribuidorasRepository = distribuidorasRepository;
         this.paisesRepository = paisesRepository;
-        this.juegosRepository = juegosRepository;
+        this.DistribuidorasRepository = DistribuidorasRepository;
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<Object> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) String idStr) {
+    public ResponseEntity<Object> obtenerDistribuidoraOLista(@RequestParam(name = "id", required = false) String idStr) {
         if (idStr != null) {
             try {
                 int id = Integer.parseInt(idStr);
@@ -51,38 +50,12 @@ public class DistribuidorasController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
-            List<Distribuidoras> distribuidoras = distribuidorasRepository.findAll();
-            return ResponseEntity.ok(distribuidoras);
+            List<Distribuidoras> Distribuidoras = DistribuidorasRepository.findAll();
+            return ResponseEntity.ok(Distribuidoras);
         }
     }
 
-    @DeleteMapping("/lista")
-    public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr) {
 
-        try {
-            int id = Integer.parseInt(idStr);
-
-            HashMap<String, Object> rpta = new HashMap<>();
-
-            Optional<Distribuidoras> byId = distribuidorasRepository.findById(id);
-            if (byId.isPresent()) {
-                Distribuidoras distribuidora = byId.get();
-
-                List<Juegos> juegosWithDistribuidora = juegosRepository.buscar(distribuidora.getIddistribuidora());
-                for (Juegos juego : juegosWithDistribuidora) {
-                    juego.setDistribuidora(null);
-                    juegosRepository.save(juego);
-                }
-                distribuidorasRepository.deleteById(id);
-                rpta.put("result", "ok");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            return ResponseEntity.ok(rpta);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
 
     @PostMapping("/lista")
     public ResponseEntity<HashMap<String, Object>> guardarDistribuidora(

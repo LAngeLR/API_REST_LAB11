@@ -13,4 +13,6 @@ public interface FacturasRepository extends JpaRepository<Facturas, Integer> {
     @Query(value = "select * from factura where idjuegosxusuario = ?1",nativeQuery = true)
     List<Facturas> buscarPorIdJuegosxUsuario(int id);
 
+    List<Facturas> findByJuegosxUsuario(JuegosxUsuario juegosxUsuario);
+
 }
