@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 
 @Entity
-@Table(name = "facturas")
+@Table(name = "factura")
 @Getter
 @Setter
 public class Facturas {
@@ -32,7 +32,7 @@ public class Facturas {
     private Double monto;
 
     @ManyToOne
-    @JoinColumn(name = "idjuegoxusuario")
+    @JoinColumn(name = "idjuegosxusuario")
     @Valid
     private JuegosxUsuario idjuegoxusuario;
 
