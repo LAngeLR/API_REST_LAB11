@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ public class JuegosController {
     final
     JuegosRepository juegosRepository;
     final
+    FacturasRepository facturasRepository;
+    final
     PlataformasRepository plataformasRepository;
     final
     DistribuidorasRepository distribuidorasRepository;
@@ -27,13 +30,14 @@ public class JuegosController {
     private final JuegosxUsuarioRepository juegosxUsuarioRepository;
 
     public JuegosController(JuegosRepository juegosRepository, PlataformasRepository plataformasRepository, DistribuidorasRepository distribuidorasRepository, GenerosRepository generosRepository, UserRepository userRepository,
-                            JuegosxUsuarioRepository juegosxUsuarioRepository) {
+                            JuegosxUsuarioRepository juegosxUsuarioRepository, FacturasRepository facturasRepository) {
         this.juegosRepository = juegosRepository;
         this.plataformasRepository = plataformasRepository;
         this.distribuidorasRepository = distribuidorasRepository;
         this.generosRepository = generosRepository;
         this.userRepository = userRepository;
         this.juegosxUsuarioRepository = juegosxUsuarioRepository;
+        this.facturasRepository = facturasRepository;
     }
 
     @GetMapping("/lista")
@@ -78,6 +82,7 @@ public class JuegosController {
         return ResponseEntity.ok(respuesta);*/
     }
 
+    @Transactional
     @DeleteMapping("/lista")
     public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr){
 
@@ -91,6 +96,14 @@ public class JuegosController {
                 Juegos juegos = byId.get();
 
                 List<JuegosxUsuario> juegosxUsuarios = juegosxUsuarioRepository.buscar(juegos.getIdjuego());
+                for (JuegosxUsuario ju : juegosxUsuarios) {
+                    List<Facturas> facturasRelacionadas = facturasRepository.buscarPorIdJuegosxUsuario(ju.getIdJuegosxUsuario());
+                    for (Facturas factura : facturasRelacionadas) {
+                        factura.setIdjuegoxusuario(null);
+                    }
+                    // Guardar las facturas actualizadas en la base de datos
+                    facturasRepository.saveAll(facturasRelacionadas);
+                }
                 juegosxUsuarioRepository.deleteAll(juegosxUsuarios);
                 juegosRepository.deleteById(id);
                 rpta.put("result","ok");
