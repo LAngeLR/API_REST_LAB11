@@ -23,14 +23,12 @@ public class UsuariosController {
     @Autowired
     private UserRepository userRepository;
 
-/*
     @GetMapping(value = "/listaUsuarios")
     public List<User> listarUsuarios(){
         return userRepository.findAll();
     }
-*/
 
-    @PostMapping(value = "/registro/xwwwform", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/registro")
     public ResponseEntity<HashMap<String, Object>> registrarUsuario(@RequestBody User usuario){
 
             HashMap<String, Object> response = new HashMap<>();
@@ -66,6 +64,28 @@ public class UsuariosController {
             return ResponseEntity.badRequest().body(response);
         }
 
+    }
+
+    @GetMapping(value = "/buscarUsuario")
+    public ResponseEntity<HashMap<String, Object>> buscarUsuario(@RequestParam("id") Integer idUsuario){
+        HashMap<String, Object> response = new HashMap<>();
+
+        if(idUsuario != null && idUsuario > 0){
+            Optional<User> usuarioOptional = userRepository.findById(idUsuario);
+            if(usuarioOptional.isPresent()){
+                response.put("result","ok");
+                response.put("usuario",usuarioOptional.get());
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("result","error");
+                response.put("msg","El usuario no existe");
+                return ResponseEntity.badRequest().body(response);
+            }
+        } else {
+            response.put("result","error");
+            response.put("msg","El ID es requerido");
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     private static User getUser(User usuario, Optional<User> usuarioOptional) {

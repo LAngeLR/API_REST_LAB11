@@ -59,6 +59,26 @@ public class JuegosController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/listaMisJuegos")
+    public ResponseEntity<HashMap<String, Object>> obtenerMisJuegos(@RequestParam(name = "id", required = false) Integer idUsuario) {
+        HashMap<String, Object> respuesta = new HashMap<>();
+
+        try{
+            Optional<User> usuario = userRepository.findById(idUsuario);
+            if (usuario.isPresent()) {
+                List<JuegosxUsuario> juegosxUsuarios = juegosxUsuarioRepository.buscar(idUsuario);
+                respuesta.put("juegos", juegosxUsuarios);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        }
+        catch(NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        return ResponseEntity.ok(respuesta);
+    }
+
     @DeleteMapping("/lista")
     public ResponseEntity<HashMap<String, Object>> borrar(@RequestParam("id") String idStr){
 
