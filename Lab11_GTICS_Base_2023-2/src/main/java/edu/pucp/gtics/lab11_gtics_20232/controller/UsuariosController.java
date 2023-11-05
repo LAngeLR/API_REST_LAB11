@@ -41,6 +41,19 @@ public class UsuariosController {
 
     }
 
+    @PutMapping(value = "/registro")
+    public ResponseEntity<HashMap<String, Object>> actualizarUsuario(@RequestBody User usuario){
+
+        HashMap<String, Object> response = new HashMap<>();
+
+        userRepository.save(usuario);
+        response.put("result","ok");
+        response.put("msg","Usuario registrado correctamente");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    }
+
     @PutMapping("/actualizarUsuario")
     public ResponseEntity<HashMap<String, Object>> cambiarRol(@RequestBody User usuario) {
 
@@ -67,7 +80,7 @@ public class UsuariosController {
     }
 
     @GetMapping(value = "/buscarUsuario")
-    public ResponseEntity<HashMap<String, Object>> buscarUsuario(@RequestParam("id") Integer idUsuario){
+    public User buscarUsuario(@RequestParam("id") Integer idUsuario){
         HashMap<String, Object> response = new HashMap<>();
 
         if(idUsuario != null && idUsuario > 0){
@@ -75,16 +88,20 @@ public class UsuariosController {
             if(usuarioOptional.isPresent()){
                 response.put("result","ok");
                 response.put("usuario",usuarioOptional.get());
-                return ResponseEntity.ok(response);
+                ResponseEntity.ok(response);
+                return usuarioOptional.get();
             } else {
                 response.put("result","error");
                 response.put("msg","El usuario no existe");
-                return ResponseEntity.badRequest().body(response);
+                ResponseEntity.badRequest().body(response);
+                return null;
             }
         } else {
             response.put("result","error");
             response.put("msg","El ID es requerido");
-            return ResponseEntity.badRequest().body(response);
+            ResponseEntity.badRequest().body(response);
+            return null;
+
         }
     }
 
