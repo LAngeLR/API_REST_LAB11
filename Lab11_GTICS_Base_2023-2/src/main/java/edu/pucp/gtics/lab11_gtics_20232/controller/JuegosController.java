@@ -37,15 +37,13 @@ public class JuegosController {
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Juegos>> obtenerJuegoOLista(@RequestParam(name = "id", required = false) String idStr) {
-        List<Juegos> juegos = new ArrayList<>();
-
+    public ResponseEntity<Object> obtenerJuegoOLista(@RequestParam(name = "id", required = false) String idStr) {
         if (idStr != null) {
             try {
                 int id = Integer.parseInt(idStr);
                 Optional<Juegos> juego = juegosRepository.findById(id);
                 if (juego.isPresent()) {
-                    juegos.add(juego.get());
+                    return ResponseEntity.ok(juego.get());
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 }
@@ -53,11 +51,11 @@ public class JuegosController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
-            juegos = juegosRepository.findAll();
+            List<Juegos> juegos = juegosRepository.findAll();
+            return ResponseEntity.ok(juegos);
         }
-
-        return ResponseEntity.ok(juegos);
     }
+
 
     @GetMapping("/listaMisJuegos")
     public List<JuegosxUsuario> obtenerMisJuegos(@RequestParam(name = "id") Integer idUsuario) {

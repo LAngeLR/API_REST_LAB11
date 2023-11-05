@@ -36,15 +36,13 @@ public class DistribuidorasController {
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Distribuidoras>> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) String idStr) {
-        List<Distribuidoras> distribuidoras = new ArrayList<>();
-
+    public ResponseEntity<Object> obtenerDistribuidoraoOLista(@RequestParam(name = "id", required = false) String idStr) {
         if (idStr != null) {
             try {
                 int id = Integer.parseInt(idStr);
                 Optional<Distribuidoras> distribuidora = distribuidorasRepository.findById(id);
                 if (distribuidora.isPresent()) {
-                    distribuidoras.add(distribuidora.get());
+                    return ResponseEntity.ok(distribuidora.get());
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 }
@@ -52,10 +50,9 @@ public class DistribuidorasController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
-            distribuidoras = distribuidorasRepository.findAll();
+            List<Distribuidoras> distribuidoras = distribuidorasRepository.findAll();
+            return ResponseEntity.ok(distribuidoras);
         }
-
-        return ResponseEntity.ok(distribuidoras);
     }
 
     @DeleteMapping("/lista")
