@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -36,28 +37,25 @@ public class JuegosController {
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<HashMap<String, Object>> obtenerJuegoOLista(@RequestParam(name = "id", required = false) String idStr) {
-        HashMap<String, Object> respuesta = new HashMap<>();
-
+    public ResponseEntity<Object> obtenerJuegoOLista(@RequestParam(name = "id", required = false) String idStr) {
         if (idStr != null) {
-            try{
+            try {
                 int id = Integer.parseInt(idStr);
                 Optional<Juegos> juego = juegosRepository.findById(id);
                 if (juego.isPresent()) {
-                    respuesta.put("juego", juego.get());
+                    return ResponseEntity.ok(juego.get());
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 }
-            }
-            catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
             List<Juegos> juegos = juegosRepository.findAll();
-            respuesta.put("juegos", juegos);
+            return ResponseEntity.ok(juegos);
         }
-        return ResponseEntity.ok(respuesta);
     }
+
 
     @GetMapping("/listaMisJuegos")
     public List<JuegosxUsuario> obtenerMisJuegos(@RequestParam(name = "id") Integer idUsuario) {
