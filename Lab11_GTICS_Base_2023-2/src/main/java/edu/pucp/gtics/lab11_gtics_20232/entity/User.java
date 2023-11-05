@@ -34,6 +34,16 @@ public class User {
 
     private String telefono;
 
+    public String getNumerocuenta() {
+        return numerocuenta;
+    }
+
+    public void setNumerocuenta(String numerocuenta) {
+        this.numerocuenta = numerocuenta;
+    }
+
+    private String numerocuenta;
+
     public Integer getIdusuario() {return idusuario;}
 
     public void setIdusuario(int idusuario) {
