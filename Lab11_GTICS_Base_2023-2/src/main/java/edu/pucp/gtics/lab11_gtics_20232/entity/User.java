@@ -16,6 +16,24 @@ public class User {
     private String autorizacion;
     private int enabled;
 
+    public void setIdusuario(Integer idusuario) {
+        this.idusuario = idusuario;
+    }
+
+    public void setEnabled(int enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    private String telefono;
+
     public Integer getIdusuario() {return idusuario;}
 
     public void setIdusuario(int idusuario) {
