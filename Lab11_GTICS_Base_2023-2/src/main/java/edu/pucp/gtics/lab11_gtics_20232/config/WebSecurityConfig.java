@@ -1,4 +1,3 @@
-/*
 package edu.pucp.gtics.lab11_gtics_20232.config;
 
 import org.springframework.context.annotation.Bean;
@@ -48,10 +47,8 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/juegos/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/distribuidora/**").hasAnyAuthority("ADMIN")
-*/
-/*
                 .antMatchers("/usuarios/listaUsuarios").hasAnyAuthority("ADMIN")
-*//*
+
 
                 .antMatchers("/usuarios/actualizarUsuario").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().permitAll();
@@ -59,4 +56,4 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-}*/
+}

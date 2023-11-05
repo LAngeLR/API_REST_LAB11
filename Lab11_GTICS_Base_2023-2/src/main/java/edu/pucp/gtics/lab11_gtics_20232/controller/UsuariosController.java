@@ -105,6 +105,32 @@ public class UsuariosController {
         }
     }
 
+    @GetMapping(value = "/buscarUsuarioPorCorreo")
+    public User buscarUsuarioPorCorreo(@RequestParam("correo") String correo){
+        HashMap<String, Object> response = new HashMap<>();
+
+        if(correo != null){
+            User usuario = userRepository.findByCorreo(correo);
+            if(usuario != null){
+                response.put("result","ok");
+                response.put("usuario",usuario);
+                ResponseEntity.ok(response);
+                return usuario;
+            } else {
+                response.put("result","error");
+                response.put("msg","El usuario no existe");
+                ResponseEntity.badRequest().body(response);
+                return null;
+            }
+        } else {
+            response.put("result","error");
+            response.put("msg","El ID es requerido");
+            ResponseEntity.badRequest().body(response);
+            return null;
+
+        }
+    }
+
     private static User getUser(User usuario, Optional<User> usuarioOptional) {
         User usuarioActual = usuarioOptional.get();
 
